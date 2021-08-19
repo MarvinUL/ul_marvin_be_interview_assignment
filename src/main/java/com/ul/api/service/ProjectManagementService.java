@@ -14,30 +14,38 @@ import com.ul.api.entity.Project;
 import com.ul.api.enumeration.StatusEnum;
 import com.ul.api.repository.ProjectManagementRepository;
 
-import lombok.extern.slf4j.Slf4j;
-
+/**
+ * 
+ * @author neelabh
+ * @apiNote This is service layer of Project Management Flow
+ *
+ */
 @Service
-@Slf4j
 public class ProjectManagementService {
-	
-	
 
 	@Autowired
 	ProjectManagementRepository projectManagementRepository;
 
+	/**
+	 * 
+	 * @param project
+	 * @return created project
+	 */
 	public ResponseEntity<Project> createProject(Project project) {
-		log.info("Inside createProject method of ProjectManagementService");
 		try {
-			Project projectData = projectManagementRepository
-					.save(new Project(project.getName(), StatusEnum.IN_PROGRESS, LocalDateTime.now(), project.isArchived()));
+			Project projectData = projectManagementRepository.save(
+					new Project(project.getName(), project.getStatus(), LocalDateTime.now(), project.isArchived()));
 			return new ResponseEntity<>(projectData, HttpStatus.CREATED);
 		} catch (Exception e) {
 			return new ResponseEntity<>(null, HttpStatus.INTERNAL_SERVER_ERROR);
 		}
 	}
 
+	/**
+	 * 
+	 * @return list of projects that are not archived
+	 */
 	public ResponseEntity<List<Project>> findProjectsNotArchived() {
-		log.info("Inside findProjectsNotArchived method of ProjectManagementService");
 		try {
 			List<Project> projects = new ArrayList<>();
 
@@ -53,12 +61,16 @@ public class ProjectManagementService {
 		}
 	}
 
+	/**
+	 * 
+	 * @param id
+	 * @return Updated project with status FINISHED and archived True
+	 */
 	public ResponseEntity<Project> archiveProjectById(Long id) {
-		log.info("Inside archiveProjectById method of ProjectManagementService");
 		Optional<Project> projectData = projectManagementRepository.findById(id);
 
 		if (projectData.isPresent()) {
-			Project project = projectData.get();			
+			Project project = projectData.get();
 			project.setStatus(StatusEnum.FINISHED);
 			project.setArchived(Boolean.TRUE);
 			return new ResponseEntity<>(projectManagementRepository.save(project), HttpStatus.OK);
