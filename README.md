@@ -2,7 +2,7 @@
 
 Thanks for taking your time to complete our coding assignment.
 
-Please create a pull request with your solution.
+Please commit and push your solution when you finish..
 
 We hope you will enjoy this assignment and should you have any questions please reach out to us.
 
